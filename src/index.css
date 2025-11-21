@@ -4,43 +4,101 @@
 
 @layer base {
   :root {
-    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-geist: 'Geist', system-ui, sans-serif;
-    --font-geist-mono: 'Geist Mono', monospace;
-    --font-mona: 'Mona Sans', system-ui, sans-serif;
-    --font-ibm-plex: 'IBM Plex Sans', system-ui, sans-serif;
-    --font-manrope: 'Manrope', system-ui, sans-serif;
+    /* Fonts */
+    --font-heading: 'Orbitron', system-ui, sans-serif;
+    --font-body: 'Exo 2', system-ui, sans-serif;
+
+    /* Phoenix Colors (Cyberpunk × Futuristic) */
+    --phoenix-cyan: 194 100% 60%; /* Icy Neon Cyan */
+    --phoenix-steel: 200 60% 45%; /* Steel Blue */
+    --phoenix-cyan-accent: 190 100% 55%; /* Cool Cyan Accent */
+    --phoenix-purple: 268 85% 58%; /* Neon Purple */
+    --phoenix-orange: 14 100% 60%; /* Neon Orange */
+
+    --phoenix-bg: 220 40% 6%; /* Cyber Dark */
+    --phoenix-bg-deeper: 220 40% 3%; /* Cyber Darker */
   }
 
   html {
-    font-family: var(--font-sans);
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-body);
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
   }
 
   body {
-    @apply antialiased;
+    @apply antialiased bg-[hsl(var(--phoenix-bg))] text-white;
+  }
+
+  /* Custom scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsla(var(--phoenix-cyan)/0.5) hsl(var(--phoenix-bg-deeper));
+  }
+  .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: hsl(var(--phoenix-bg-deeper)); }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: hsla(var(--phoenix-cyan)/0.5); border-radius: 9999px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: hsla(var(--phoenix-cyan)/0.8); }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl shadow-[0_0_30px_rgba(79,209,197,0.15)];
+  }
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center font-bold rounded-xl px-5 py-3 select-none active:scale-95 transition-transform duration-150;
+    background: linear-gradient(90deg, hsl(var(--phoenix-cyan)) 0%, hsl(var(--phoenix-steel)) 50%, hsl(var(--phoenix-purple)) 100%);
+    background-size: 200% 100%;
+    color: white;
+    box-shadow: 0 0 20px hsla(var(--phoenix-cyan)/0.25);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 30px hsla(var(--phoenix-cyan)/0.4); }
+  .btn-primary:hover, .btn-gradient-hover { animation: gradient-shift 3s ease infinite; }
+
+  .gradient-separator {
+    @apply h-px w-full relative overflow-hidden rounded-full;
+    background: linear-gradient(90deg, transparent, hsla(var(--phoenix-cyan)/0.6), hsla(var(--phoenix-purple)/0.6), transparent);
+  }
+
+  .glow-cyan { text-shadow: 0 0 10px hsla(var(--phoenix-cyan)/0.6), 0 0 20px hsla(var(--phoenix-cyan)/0.4); }
+  .glow-purple { text-shadow: 0 0 10px hsla(var(--phoenix-purple)/0.6), 0 0 20px hsla(var(--phoenix-purple)/0.4); }
+  .gradient-text-vibrant {
+    background: linear-gradient(90deg, hsl(var(--phoenix-cyan)), hsl(var(--phoenix-purple)), hsl(var(--phoenix-orange)));
+    background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: gradient-shift 6s ease infinite;
   }
 }
 
-/* Custom utility classes for shadcn/ui patterns */
 @layer utilities {
-  .animate-in {
-    animation-name: animateIn;
-    animation-duration: 350ms;
-    --tw-enter-opacity: initial;
-    --tw-enter-scale: initial;
-    --tw-enter-rotate: initial;
-    --tw-enter-translate-x: initial;
-    --tw-enter-translate-y: initial;
+  .heading {
+    font-family: var(--font-heading);
+    letter-spacing: 0.02em;
   }
+  .backface-hidden { backface-visibility: hidden; }
+  .preserve-3d { transform-style: preserve-3d; }
+  .gpu { transform: translateZ(0); will-change: transform, opacity, filter; }
+}
 
-  .animate-out {
-    animation-name: animateOut;
-    animation-duration: 350ms;
-    --tw-exit-opacity: initial;
-    --tw-exit-scale: initial;
-    --tw-exit-rotate: initial;
-    --tw-exit-translate-x: initial;
-    --tw-exit-translate-y: initial;
-  }
+/* Keyframes */
+@keyframes gradient-shift { 0%{ background-position: 0% 50%; } 50%{ background-position: 100% 50%; } 100%{ background-position: 0% 50%; } }
+@keyframes pulse-glow { 0%{ box-shadow: 0 0 20px hsla(var(--phoenix-cyan)/0.3);} 50%{ box-shadow: 0 0 40px hsla(var(--phoenix-cyan)/0.6);} 100%{ box-shadow: 0 0 20px hsla(var(--phoenix-cyan)/0.3);} }
+@keyframes float { 0%{ transform: translateY(0);} 50%{ transform: translateY(-10px);} 100%{ transform: translateY(0);} }
+@keyframes micro-float { 0%{ transform: translateY(0);} 50%{ transform: translateY(-4px);} 100%{ transform: translateY(0);} }
+@keyframes shimmer { 0%{ transform: translateX(-1000px);} 100%{ transform: translateX(1000px);} }
+@keyframes rotate-slow { 0%{ transform: rotate(0deg);} 100%{ transform: rotate(360deg);} }
+@keyframes scroll-fade-in { 0%{ opacity: 0; transform: translateY(30px);} 100%{ opacity: 1; transform: translateY(0);} }
+@keyframes enhanced-click { 0%{ transform: scale(1);} 60%{ transform: scale(0.94);} 100%{ transform: scale(1);} }
+
+/* Helper animation classes */
+.animate-gradient-shift { animation: gradient-shift 3s ease infinite; }
+.glow-pulse { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-micro-float { animation: micro-float 3s ease-in-out infinite; }
+.animate-rotate-slow { animation: rotate-slow 20s linear infinite; }
+.animate-scroll-in { animation: scroll-fade-in 0.6s ease-out both; }
+.enhanced-click { animation: enhanced-click 140ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
